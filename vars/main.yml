@@ -1,0 +1,9 @@
+---
+# Default variables
+
+## Regular user accunt
+username: johnd
+fullname: John Doe
+
+## System configuration
+disable_root_ssh: no

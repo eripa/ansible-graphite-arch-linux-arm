@@ -1,0 +1,5 @@
+---
+# handlers file for system
+
+- name: Restart sshd service
+  service: name=sshd state=restarted

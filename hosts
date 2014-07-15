@@ -1,0 +1,2 @@
+[alarm]
+192.168.90.123 hostname=graphite ansible_python_interpreter=/usr/bin/python2

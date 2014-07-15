@@ -1,0 +1,35 @@
+---
+# tasks file for system
+
+- name: Check for Python 2 interpreter
+  raw: test -e {{ ansible_python_interpreter }}
+  register: python_status
+  ignore_errors: True
+
+- name: Install Python 2 interpreter
+  raw: pacman -Sy --noconfirm python2
+  when: python_status|failed
+
+- name: Install system packages
+  pacman: name="{{ item }}" update_cache=yes
+  with_items:
+    - python2-pip
+    - sudo
+    - vim
+    - git
+
+- name: Setup a regular user
+  user: name="{{ username | mandatory }}" comment="{{ fullname | mandatory }}" group=users groups=wheel
+
+- name: Enable Wheel in /etc/sudoers
+  lineinfile: "dest=/etc/sudoers state=present regexp='^#?%wheel' line='%wheel ALL=(ALL) NOPASSWD: ALL'"
+
+- name: Disable root SSH login
+  lineinfile: "dest=/etc/ssh/sshd_config state=present regexp='^#?PermitRootLogin' line='PermitRootLogin no'"
+  notify: Restart sshd service
+  when: disable_root_ssh
+
+- name: Enable root SSH login
+  lineinfile: "dest=/etc/ssh/sshd_config state=present regexp='^PermitRootLogin' line='PermitRootLogin yes'"
+  notify: Restart sshd service
+  when: not disable_root_ssh

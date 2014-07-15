@@ -1,0 +1,15 @@
+---
+
+## pipaOS seems a bit broken out-of-the-box, must run "sudo apt-get -f install"
+## to get a working python installation
+
+- name: Setup Graphite for Arch Linux ARM on Raspberry Pi
+  hosts: alarm
+  gather_facts: no # cannot do this the first run, enable after first run if needed
+  sudo: no # change to yes after first run
+  remote_user: root # change to regular username after first run
+  roles:
+    - system
+    - graphite
+  vars_files:
+    - vars/main.yml
